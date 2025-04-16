@@ -37,3 +37,6 @@ frontend/dist/
 # Env
 *.env
 .env*
+
+.vscode/
+

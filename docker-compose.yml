@@ -1,3 +1,5 @@
+version: '3.8'
+
 services:
   postgres:
     image: postgres:15
@@ -10,6 +12,8 @@ services:
       - "5432:5432"
     networks:
       - backend
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
 
   auth-service:
     build: ./auth-service
@@ -22,8 +26,22 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/authdb
       SPRING_DATASOURCE_USERNAME: authuser
       SPRING_DATASOURCE_PASSWORD: authpass
+      JWT_SECRET: default_dev_secret
+    networks:
+      - backend
+
+  frontend:
+    build: ./frontend
+    container_name: frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - auth-service
     networks:
       - backend
 
 networks:
   backend:
+
+volumes:
+  postgres_data: {}
